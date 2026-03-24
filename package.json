@@ -1,0 +1,32 @@
+{
+  "name": "digital-securities-settlement",
+  "version": "1.0.0",
+  "description": "DvP settlement infrastructure on Ethereum — DTCC Project Ion prototype",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "demo": "hardhat run scripts/demo.js --network localhost",
+    "node": "hardhat node"
+  },
+  "keywords": [
+    "blockchain",
+    "settlement",
+    "securities",
+    "dvp",
+    "ethereum",
+    "solidity",
+    "dtcc",
+    "defi"
+  ],
+  "author": "James Tsetsekas",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}
