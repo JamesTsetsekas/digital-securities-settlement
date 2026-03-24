@@ -28,40 +28,40 @@ The key insight: by wrapping both legs (securities + payment) in a single atomic
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     PARTICIPANTS                                 │
-│                                                                  │
-│  ┌──────────┐    ┌──────────┐    ┌───────────────┐             │
-│  │  Buyer   │    │  Seller  │    │  Compliance   │             │
-│  │ (USDC)   │    │ (Tokens) │    │   Officer     │             │
-│  └────┬─────┘    └────┬─────┘    └───────┬───────┘             │
-│       │               │                  │                       │
-│       ▼               ▼                  ▼                       │
-│  ┌────────────────────────────────────────────────────────┐     │
-│  │                DVPSettlement.sol                        │     │
-│  │  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  │     │
-│  │  │  depositPayment│  │depositSecurities│  │approveAndSettle│  │     │
-│  │  │  (USDC lock) │  │ (Token lock) │  │  (CCP only)  │  │     │
-│  │  └─────────────┘  └──────────────┘  └──────────────┘  │     │
-│  │                                                         │     │
-│  │  Settlement Lifecycle:                                  │     │
-│  │  CREATED → BUYER_LOCKED / SELLER_LOCKED → LEGS_LOCKED  │     │
-│  │         → SETTLED (atomic) or CANCELLED (returned)     │     │
-│  └────────────────────────┬───────────────────────────────┘     │
-│                            │                                      │
-│               ┌────────────┴────────────┐                        │
-│               ▼                         ▼                        │
-│  ┌─────────────────────┐    ┌────────────────────────┐          │
-│  │  SecurityToken.sol  │    │  ComplianceRegistry.sol │          │
-│  │                     │    │                         │          │
-│  │  ERC-20 + Controls  │───▶│  KYC · AML · Sanctions  │          │
-│  │  ─ Whitelist        │    │  ─ KYCStatus (5 states) │          │
-│  │  ─ Freeze/Unfreeze  │    │  ─ Accreditation (Reg D)│          │
-│  │  ─ Pause (halt)     │    │  ─ Jurisdiction blocks  │          │
-│  │  ─ Forced transfer  │    │  ─ OFAC/SDN sanctions   │          │
-│  │  ─ Role-based ACL   │    │  ─ KYC expiry tracking  │          │
-│  └─────────────────────┘    └────────────────────────┘          │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                     PARTICIPANTS                                    │
+│                                                                     │
+│  ┌──────────┐    ┌──────────┐    ┌───────────────┐                  │
+│  │  Buyer   │    │  Seller  │    │  Compliance   │                  │
+│  │ (USDC)   │    │ (Tokens) │    │   Officer     │                  │
+│  └────┬─────┘    └────┬─────┘    └───────┬───────┘                  │
+│       │               │                  │                          │
+│       ▼               ▼                  ▼                          │
+│  ┌────────────────────────────────────────────────────────────────┐ │
+│  │                DVPSettlement.sol                               │ │
+│  │  ┌────────────────┐  ┌─────────────────┐  ┌───────────────────┐│ │
+│  │  │  depositPayment│  │depositSecurities│  │approveAndSettle   ││ │
+│  │  │  (USDC lock)   │  │ (Token lock)    │  │  (CCP only)       ││ │
+│  │  └────────────────┘  └─────────────────┘  └───────────────────┘│ │
+│  │                                                                │ │
+│  │  Settlement Lifecycle:                                         │ │
+│  │  CREATED → BUYER_LOCKED / SELLER_LOCKED → LEGS_LOCKED          │ │
+│  │         → SETTLED (atomic) or CANCELLED (returned)             │ │
+│  └────────────────────────┬───────────────────────────────────────┘ │
+│                            │                                        │
+│               ┌────────────┴────────────┐                           │
+│               ▼                         ▼                           │
+│  ┌─────────────────────┐    ┌────────────────────────┐              │
+│  │  SecurityToken.sol  │    │  ComplianceRegistry.sol │             │
+│  │                     │    │                         │             │
+│  │  ERC-20 + Controls  │───▶│  KYC · AML · Sanctions  │            │
+│  │  ─ Whitelist        │    │  ─ KYCStatus (5 states) │             │
+│  │  ─ Freeze/Unfreeze  │    │  ─ Accreditation (Reg D)│             │
+│  │  ─ Pause (halt)     │    │  ─ Jurisdiction blocks  │             │
+│  │  ─ Forced transfer  │    │  ─ OFAC/SDN sanctions   │             │
+│  │  ─ Role-based ACL   │    │  ─ KYC expiry tracking  │             │
+│  └─────────────────────┘    └────────────────────────┘              │
+└─────────────────────────────────────────────────────────────────────┘
 
 Roles:
   DEFAULT_ADMIN_ROLE  — Multi-sig system admin
