@@ -48,8 +48,8 @@ The key insight: by wrapping both legs (securities + payment) in a single atomic
 │  │  CREATED → BUYER_LOCKED / SELLER_LOCKED → LEGS_LOCKED          │ │
 │  │         → SETTLED (atomic) or CANCELLED (returned)             │ │
 │  └────────────────────────┬───────────────────────────────────────┘ │
-│                            │                                        │
-│               ┌────────────┴────────────┐                           │
+│                           │                                         │
+│               ┌───────────┴─────────────┐                           │
 │               ▼                         ▼                           │
 │  ┌─────────────────────┐    ┌────────────────────────┐              │
 │  │  SecurityToken.sol  │    │  ComplianceRegistry.sol │             │
